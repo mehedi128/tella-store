@@ -58,11 +58,11 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
                 </label>
                 <div className="flex rounded-2xl border-2 border-black overflow-hidden bg-white">
                   <span className="bg-[#FFDE6B] px-3.5 py-3 text-xs font-black text-black flex items-center border-r-2 border-black">
-                    +91
+                    +880
                   </span>
                   <input
                     type="tel"
-                    placeholder="Enter 10-digit number"
+                    placeholder="01XXXXXXXXX"
                     value={phone}
                     onChange={e => setPhone(e.target.value)}
                     required
@@ -101,7 +101,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
               <div className="space-y-1">
                 <h4 className="font-black text-lg text-black uppercase">Welcome to Tella Squad!</h4>
                 <p className="text-xs text-zinc-700 font-bold">
-                  Signed in as +91 {phone}. Your cart and special Shark Tank discounts are synced!
+                  Signed in as +880 {phone}. Your cart and special discounts are synced!
                 </p>
               </div>
               <button

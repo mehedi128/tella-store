@@ -22,7 +22,7 @@ export const Footer: React.FC = () => {
     };
 
     const handleWhatsAppDirect = () => {
-        window.open('https://wa.me/8801752421224?text=Hi%20Tella!%20I%20want%20to%20know%20about%20the%20latest%20offers%20and%20restocks.', '_blank');
+        window.open('https://wa.me/8801850560179?text=Hi%20Tella!%20I%20want%20to%20know%20about%20the%20latest%20offers%20and%20restocks.', '_blank');
     };
 
     return (
@@ -68,7 +68,7 @@ export const Footer: React.FC = () => {
                                 <ul className='space-y-1 sm:space-y-1.5 text-xs sm:text-[13px] font-semibold text-black/90'>
                                     <li>
                                         <button onClick={handleWhatsAppDirect} className='hover:underline transition-all text-left font-medium'>
-                                            WhatsApp Us
+                                            WhatsApp: +8801850560179
                                         </button>
                                     </li>
                                 </ul>
@@ -172,7 +172,7 @@ export const Footer: React.FC = () => {
                             {!isSubscribed ? (
                                 <form onSubmit={handleWhatsappSubmit} className='space-y-3 pt-2'>
                                     <div className='flex rounded-xl border-2 border-black overflow-hidden bg-white '>
-                                        <span className='bg-[#FFDE6B] px-3 py-2.5 text-xs font-black text-black border-r-2 border-black flex items-center'>+91</span>
+                                        <span className='bg-[#FFDE6B] px-3 py-2.5 text-xs font-black text-black border-r-2 border-black flex items-center'>+880</span>
                                         <input
                                             type='tel'
                                             placeholder='Enter WhatsApp Number'

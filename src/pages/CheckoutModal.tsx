@@ -144,7 +144,7 @@ ${itemsSummary}
 *ঠিকানা:* ${formData.address || 'উল্লেখ করা হয়নি'}`;
 
     const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/8801752421224?text=${encodedMessage}`, '_blank');
+    window.open(`https://wa.me/8801850560179?text=${encodedMessage}`, '_blank');
   };
 
   const handleFinish = () => {

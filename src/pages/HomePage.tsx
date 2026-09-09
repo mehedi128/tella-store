@@ -42,7 +42,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onQuickView }) => {
         "description": "Leading brand for premium export quality underwear, boxers and loungewear in Bangladesh.",
         "contactPoint": {
           "@type": "ContactPoint",
-          "telephone": "+8801700000000",
+          "telephone": "+8801850560179",
           "contactType": "Customer Support",
           "areaServed": "BD",
           "availableLanguage": ["Bengali", "English"]

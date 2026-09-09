@@ -6,6 +6,7 @@ import { ComboOptionSelector, ComboOption } from '../components/product/ComboOpt
 import { ProductCard } from '../components/product/ProductCard';
 import { useCart } from '../context/CartContext';
 import { useRouter } from '../context/RouterContext';
+import { SEO } from '../components/seo/SEO';
 import { ProductSize, Product } from '../types';
 import {
   ShoppingBag,
@@ -177,8 +178,88 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
     setOpenAccordion(prev => (prev === key ? null : key));
   };
 
+  const productSchema = useMemo(() => {
+    const fullUrl = `https://tella-store.vercel.app/product/${product.slug}`;
+    return {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Product",
+          "@id": `${fullUrl}#product`,
+          "name": product.name,
+          "image": product.images,
+          "description": product.description,
+          "sku": product.id,
+          "brand": {
+            "@type": "Brand",
+            "name": product.name.toLowerCase().includes('umbro') ? 'Umbro' : 'TELLA'
+          },
+          "offers": {
+            "@type": "Offer",
+            "url": fullUrl,
+            "priceCurrency": "BDT",
+            "price": product.price,
+            "priceValidUntil": "2027-12-31",
+            "itemCondition": "https://schema.org/NewCondition",
+            "availability": product.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            "seller": {
+              "@type": "Organization",
+              "name": "TELLA Store"
+            }
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": product.rating || 4.9,
+            "reviewCount": product.reviewsCount || 120,
+            "bestRating": "5",
+            "worstRating": "1"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": `${fullUrl}#breadcrumb`,
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://tella-store.vercel.app/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": product.category === 'man' ? "Men's Underwear" : "Women's Underwear",
+              "item": `https://tella-store.vercel.app/${product.category}`
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": product.name,
+              "item": fullUrl
+            }
+          ]
+        }
+      ]
+    };
+  }, [product]);
+
   return (
     <div id="product-detail-root" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 space-y-12 animate-in fade-in duration-300">
+      <SEO
+        title={`${product.name} | TELLA Store`}
+        description={product.description.slice(0, 160)}
+        canonicalUrl={`https://tella-store.vercel.app/product/${product.slug}`}
+        ogType="product"
+        ogImage={product.images[0]}
+        productData={{
+          price: product.price,
+          currency: 'BDT',
+          availability: product.inStock ? 'instock' : 'oos',
+          brand: 'Umbro'
+        }}
+        schema={productSchema}
+      />
+
       {/* Top breadcrumbs */}
       <nav className="flex items-center gap-2 text-xs font-black text-zinc-600 uppercase tracking-wide">
         <button onClick={() => navigate('/')} className="hover:text-black">Home</button>

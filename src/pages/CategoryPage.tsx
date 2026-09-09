@@ -4,6 +4,7 @@ import { ProductGrid } from '../components/product/ProductGrid';
 import { PRODUCTS } from '../data/products';
 import { Category, Subcategory, FilterState, Product, ProductSize } from '../types';
 import { useRouter } from '../context/RouterContext';
+import { SEO } from '../components/seo/SEO';
 import { Sparkles, SlidersHorizontal, ArrowUpDown, ChevronRight, X } from 'lucide-react';
 
 interface CategoryPageProps {
@@ -190,8 +191,58 @@ export const CategoryPage: React.FC<CategoryPageProps> = ({ onQuickView }) => {
 
   const banner = getBannerDetails();
 
+  const categorySchema = useMemo(() => {
+    const fullUrl = `https://tella-store.vercel.app${path}`;
+    return {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "CollectionPage",
+          "@id": `${fullUrl}#collection`,
+          "url": fullUrl,
+          "name": banner.title,
+          "description": banner.subtitle,
+          "mainEntity": {
+            "@type": "ItemList",
+            "itemListElement": filteredProducts.map((p, idx) => ({
+              "@type": "ListItem",
+              "position": idx + 1,
+              "url": `https://tella-store.vercel.app/product/${p.slug}`,
+              "name": p.name
+            }))
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": `${fullUrl}#breadcrumb`,
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://tella-store.vercel.app/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": isNewArrival ? 'New Arrivals' : category === 'man' ? "Men's Collection" : "Women's Collection",
+              "item": fullUrl
+            }
+          ]
+        }
+      ]
+    };
+  }, [path, banner, filteredProducts, isNewArrival, category]);
+
   return (
     <div id="category-page-root" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-8 animate-in fade-in duration-300">
+      <SEO
+        title={`${banner.title} | TELLA`}
+        description={banner.subtitle}
+        canonicalUrl={`https://tella-store.vercel.app${path}`}
+        schema={categorySchema}
+      />
+
       {/* Breadcrumb navigation */}
       <nav className="flex items-center gap-2 text-xs font-black text-zinc-600 uppercase tracking-wide">
         <button onClick={() => navigate('/')} className="hover:text-black">Home</button>

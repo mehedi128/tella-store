@@ -4,6 +4,7 @@ import { useCart } from '../context/CartContext';
 import { useRouter } from '../context/RouterContext';
 import { PRODUCTS } from '../data/products';
 import { ProductCard } from '../components/product/ProductCard';
+import { SEO } from '../components/seo/SEO';
 
 interface CartPageProps {
   onOpenCheckout: () => void;
@@ -49,6 +50,7 @@ export const CartPage: React.FC<CartPageProps> = ({ onOpenCheckout }) => {
   if (items.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center space-y-6 animate-in fade-in">
+        <SEO title="Shopping Bag | TELLA" noindex={true} />
         <div className="w-24 h-24 rounded-3xl bg-[#FFDE6B] border-2 border-black text-black mx-auto flex items-center justify-center ">
           <ShoppingBag className="w-12 h-12 stroke-[2.5]" />
         </div>
@@ -72,6 +74,7 @@ export const CartPage: React.FC<CartPageProps> = ({ onOpenCheckout }) => {
 
   return (
     <div id="full-cart-page" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10 animate-in fade-in">
+      <SEO title="Shopping Bag | TELLA" noindex={true} />
       {/* Title */}
       <div className="space-y-1">
         <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-black text-[#111111] uppercase tracking-tight">

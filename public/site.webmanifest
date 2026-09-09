@@ -1,0 +1,16 @@
+{
+  "name": "TELLA | Premium Innerwear & Loungewear",
+  "short_name": "TELLA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFBF2",
+  "theme_color": "#FF4800",
+  "description": "Premium 100% export quality cotton boxers and innerwear in Bangladesh.",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Tella E-Commerce Storefront",
+  "description": "Modern, mobile-first D2C innerwear and apparel storefront for Tella with playful aesthetics, mega-menus, rich product filtering, and cart management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

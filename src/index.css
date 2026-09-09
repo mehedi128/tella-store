@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+.font-display {
+  font-family: 'Syne', system-ui, sans-serif;
+  letter-spacing: -0.03em;
+}
+
+/* Bold Typography & Clean Crisp Utilities */
+.btn-bold-primary {
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: #FF5A1F;
+  color: #ffffff;
+  border: 2px solid #111111;
+  transition: all 0.15s ease-in-out;
+}
+.btn-bold-primary:hover {
+  background-color: #ff4800;
+}
+.btn-bold-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-bold-secondary {
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: #ffffff;
+  color: #111111;
+  border: 2px solid #111111;
+  transition: all 0.15s ease-in-out;
+}
+.btn-bold-secondary:hover {
+  background-color: #FFFBF2;
+}
+.btn-bold-secondary:active {
+  transform: scale(0.98);
+}
+
+.btn-bold-dark {
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: #111111;
+  color: #ffffff;
+  border: 2px solid #111111;
+  transition: all 0.15s ease-in-out;
+}
+.btn-bold-dark:hover {
+  background-color: #000000;
+}
+.btn-bold-dark:active {
+  transform: scale(0.98);
+}
+
+.card-bold {
+  background-color: #ffffff;
+  border: 2px solid #111111;
+  transition: all 0.2s ease-in-out;
+}
+.card-bold:hover {
+  transform: translateY(-2px);
+}
+
+.badge-bold {
+  border: 1.5px solid #111111;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FFFBF2;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #111111;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF5A1F;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

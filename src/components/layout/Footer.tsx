@@ -68,7 +68,7 @@ export const Footer: React.FC = () => {
                                 <ul className='space-y-1 sm:space-y-1.5 text-xs sm:text-[13px] font-semibold text-black/90'>
                                     <li>
                                         <button onClick={handleWhatsAppDirect} className='hover:underline transition-all text-left font-medium'>
-                                            WhatsApp: +8801850560179
+                                            WhatsApp Us
                                         </button>
                                     </li>
                                 </ul>

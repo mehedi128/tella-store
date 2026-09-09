@@ -414,7 +414,7 @@ ${itemsSummary}
                   className="w-full bg-[#25D366] hover:bg-[#20ba5a] active:scale-[0.99] text-white font-black text-sm sm:text-base py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
                 >
                   <MessageCircle className="w-5 h-5 fill-white stroke-none" />
-                  <span>সরাসরি WhatsApp এ অর্ডার করুন (+8801850560179)</span>
+                  <span>সরাসরি WhatsApp এ অর্ডার করুন</span>
                 </button>
               </div>
             </form>

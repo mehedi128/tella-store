@@ -19,7 +19,8 @@ import {
   Share2,
   Heart,
   Droplet,
-  Feather
+  Feather,
+  MessageCircle
 } from 'lucide-react';
 
 interface ProductDetailPageProps {
@@ -167,6 +168,28 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
     } else {
       openCart();
     }
+  };
+
+  const handleDirectWhatsAppOrder = () => {
+    const bundleTitle = currentCombo.colorText
+      ? `${currentCombo.label} (${currentCombo.colorText})`
+      : currentCombo.label;
+
+    const message = `*নতুন WhatsApp সরাসরি অর্ডার:*
+--------------------------
+*পণ্য:* ${product.name}
+*প্যাকেজ:* ${bundleTitle}
+*সাইজ:* ${selectedSize}
+*পরিমাণ:* ${quantity}
+*মূল্য:* Tk ${currentCombo.price * quantity}
+--------------------------
+*গ্রাহকের তথ্য:*
+নাম:
+ফোন নম্বর:
+সম্পূর্ণ ঠিকানা:`;
+
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/8801850560179?text=${encodedMessage}`, '_blank');
   };
 
   // Related products
@@ -364,10 +387,21 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               id="pdp-buy-cod-btn"
               type="button"
               onClick={handleBuyWithCOD}
-              className="w-full h-14 rounded-2xl font-black text-sm sm:text-base tracking-wider flex items-center justify-center gap-2.5 border-2 border-black bg-[#16a34a] text-white hover:bg-[#15803d] active:scale-[0.99] transition-all cursor-pointer"
+              className="w-full h-14 rounded-2xl font-black text-sm sm:text-base tracking-wider flex items-center justify-center gap-2.5 border-2 border-black bg-[#16a34a] text-white hover:bg-[#15803d] active:scale-[0.99] transition-all cursor-pointer shadow-sm"
             >
               <Truck className="w-5 h-5 stroke-[2.5]" />
               <span>অর্ডার করুন (CASH ON DELIVERY)</span>
+            </button>
+
+            {/* Direct WhatsApp Order Button */}
+            <button
+              id="pdp-buy-whatsapp-btn"
+              type="button"
+              onClick={handleDirectWhatsAppOrder}
+              className="w-full h-13 rounded-2xl font-black text-sm sm:text-base tracking-wider flex items-center justify-center gap-2.5 border-2 border-black bg-[#25D366] text-white hover:bg-[#20ba5a] active:scale-[0.99] transition-all cursor-pointer shadow-sm"
+            >
+              <MessageCircle className="w-5 h-5 fill-white stroke-none" />
+              <span>সরাসরি WhatsApp এ অর্ডার করুন (+8801850560179)</span>
             </button>
           </div>
 

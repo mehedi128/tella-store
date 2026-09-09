@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { X, Check, User, Phone, MapPin, Lock, MessageCircle, ShoppingBag, Truck } from 'lucide-react';
+import { X, Check, User, Phone, MapPin, Lock, MessageCircle, ShoppingBag, Truck, AlertCircle } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useRouter } from '../context/RouterContext';
 import { PRODUCTS } from '../data/products';
@@ -18,6 +18,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderId, setOrderId] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Form states
   const [formData, setFormData] = useState({
@@ -28,6 +29,48 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
 
   // Delivery zone state
   const [deliveryZone, setDeliveryZone] = useState<'inside_dhaka' | 'outside_dhaka'>('outside_dhaka');
+
+  // Phone input handler (only digits and max 11 chars)
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const digitsOnly = e.target.value.replace(/\D/g, '').slice(0, 11);
+    setFormData(prev => ({ ...prev, phone: digitsOnly }));
+    if (errorMessage) setErrorMessage(null);
+  };
+
+  // Form validation function
+  const validateForm = (): boolean => {
+    const trimmedName = formData.name.trim();
+    const cleanPhone = formData.phone.replace(/\D/g, '').trim();
+    const trimmedAddress = formData.address.trim();
+
+    if (!trimmedName) {
+      setErrorMessage('অনুগ্রহ করে আপনার পুরো নাম লিখুন।');
+      return false;
+    }
+
+    if (!cleanPhone) {
+      setErrorMessage('অনুগ্রহ করে আপনার ১১ ডিজিটের মোবাইল নম্বর দিন।');
+      return false;
+    }
+
+    if (cleanPhone.length !== 11) {
+      setErrorMessage(`মোবাইল নম্বরটি অবশ্যই ১১ ডিজিটের হতে হবে (আপনি দিয়েছেন ${cleanPhone.length} ডিজিট)।`);
+      return false;
+    }
+
+    if (!cleanPhone.startsWith('01')) {
+      setErrorMessage('সঠিক বাংলাদেশি মোবাইল নম্বর দিন যা 01 দিয়ে শুরু হবে (যেমন: 01XXXXXXXXX)।');
+      return false;
+    }
+
+    if (!trimmedAddress) {
+      setErrorMessage('অনুগ্রহ করে সম্পূর্ণ ডেলিভারি ঠিকানা (থানা ও জেলাসহ) লিখুন।');
+      return false;
+    }
+
+    setErrorMessage(null);
+    return true;
+  };
 
   // Display items list (all cart items, or fallback default product)
   const displayItems = useMemo(() => {
@@ -76,8 +119,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
 
   const handleConfirmOrder = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.phone.trim() || !formData.address.trim()) {
-      alert('অনুগ্রহ করে আপনার নাম, ফোন নাম্বার এবং ঠিকানা পূরণ করুন।');
+    if (!validateForm()) {
       return;
     }
 
@@ -114,6 +156,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
   };
 
   const handleWhatsAppOrder = () => {
+    if (!validateForm()) {
+      return;
+    }
+
     const itemsSummary = displayItems
       .map((it, idx) => {
         const pName = it.bundleName || it.product.name;
@@ -139,9 +185,9 @@ ${itemsSummary}
 *সর্বমোট বিল:* Tk ${totalAmount}
 --------------------------
 *গ্রাহকের তথ্য:*
-*নাম:* ${formData.name || 'উল্লেখ করা হয়নি'}
-*ফোন:* ${formData.phone || 'উল্লেখ করা হয়নি'}
-*ঠিকানা:* ${formData.address || 'উল্লেখ করা হয়নি'}`;
+*নাম:* ${formData.name.trim()}
+*ফোন:* ${formData.phone.trim()}
+*ঠিকানা:* ${formData.address.trim()}`;
 
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/8801850560179?text=${encodedMessage}`, '_blank');
@@ -226,51 +272,88 @@ ${itemsSummary}
             </div>
           ) : (
             <form onSubmit={handleConfirmOrder} className="space-y-4">
+              {/* Error Message Banner */}
+              {errorMessage && (
+                <div className="bg-red-50 border-2 border-red-500 rounded-xl p-3 flex items-start gap-2.5 text-red-800 text-xs sm:text-sm font-bold animate-in fade-in slide-in-from-top-1">
+                  <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                  <span className="leading-snug">{errorMessage}</span>
+                </div>
+              )}
+
               {/* Customer Info Inputs */}
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 {/* Name */}
-                <div className="flex rounded-xl border border-zinc-300 overflow-hidden focus-within:border-zinc-800 transition-colors bg-white">
-                  <div className="w-12 bg-zinc-100/90 border-r border-zinc-300 flex items-center justify-center text-zinc-700 shrink-0">
-                    <User className="w-4 h-4 text-emerald-800" />
+                <div className="space-y-1">
+                  <label className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-zinc-900 flex items-center justify-between">
+                    <span>আপনার নাম <span className="text-red-500">*</span></span>
+                    <span className="text-[10px] text-zinc-500 font-semibold">(আবশ্যক)</span>
+                  </label>
+                  <div className="flex rounded-xl border border-zinc-300 overflow-hidden focus-within:border-zinc-800 transition-colors bg-white">
+                    <div className="w-12 bg-zinc-100/90 border-r border-zinc-300 flex items-center justify-center text-zinc-700 shrink-0">
+                      <User className="w-4 h-4 text-emerald-800" />
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      placeholder="যেমন: মোঃ সাকিব হোসেন"
+                      value={formData.name}
+                      onChange={e => {
+                        setFormData({ ...formData, name: e.target.value });
+                        if (errorMessage) setErrorMessage(null);
+                      }}
+                      className="w-full px-3.5 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-zinc-900 placeholder:text-zinc-400 focus:outline-none"
+                    />
                   </div>
-                  <input
-                    type="text"
-                    required
-                    placeholder="আপনার নাম লিখুন"
-                    value={formData.name}
-                    onChange={e => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-3.5 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-zinc-900 placeholder:text-zinc-400 focus:outline-none"
-                  />
                 </div>
 
                 {/* Phone */}
-                <div className="flex rounded-xl border border-zinc-300 overflow-hidden focus-within:border-zinc-800 transition-colors bg-white">
-                  <div className="w-12 bg-zinc-100/90 border-r border-zinc-300 flex items-center justify-center text-zinc-700 shrink-0">
-                    <Phone className="w-4 h-4 text-emerald-800" />
+                <div className="space-y-1">
+                  <label className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-zinc-900 flex items-center justify-between">
+                    <span>মোবাইল নম্বর (১১ ডিজিট) <span className="text-red-500">*</span></span>
+                    <span className="text-[10px] text-zinc-500 font-semibold">{formData.phone.length}/11 ডিজিট</span>
+                  </label>
+                  <div className={`flex rounded-xl border overflow-hidden transition-colors bg-white ${
+                    formData.phone && formData.phone.length !== 11 ? 'border-amber-400 focus-within:border-amber-600' : 'border-zinc-300 focus-within:border-zinc-800'
+                  }`}>
+                    <div className="w-12 bg-zinc-100/90 border-r border-zinc-300 flex items-center justify-center text-zinc-700 shrink-0">
+                      <Phone className="w-4 h-4 text-emerald-800" />
+                    </div>
+                    <input
+                      type="tel"
+                      required
+                      inputMode="numeric"
+                      maxLength={11}
+                      pattern="01[0-9]{9}"
+                      placeholder="যেমন: 01850560179"
+                      value={formData.phone}
+                      onChange={handlePhoneChange}
+                      className="w-full px-3.5 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-zinc-900 placeholder:text-zinc-400 focus:outline-none tracking-wide"
+                    />
                   </div>
-                  <input
-                    type="tel"
-                    required
-                    placeholder="ফোন নাম্বার লিখুন"
-                    value={formData.phone}
-                    onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-3.5 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-zinc-900 placeholder:text-zinc-400 focus:outline-none"
-                  />
                 </div>
 
                 {/* Address */}
-                <div className="flex rounded-xl border border-zinc-300 overflow-hidden focus-within:border-zinc-800 transition-colors bg-white">
-                  <div className="w-12 bg-zinc-100/90 border-r border-zinc-300 flex items-center justify-center text-zinc-700 shrink-0">
-                    <MapPin className="w-4 h-4 text-emerald-800" />
+                <div className="space-y-1">
+                  <label className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-zinc-900 flex items-center justify-between">
+                    <span>সম্পূর্ণ ডেলিভারি ঠিকানা <span className="text-red-500">*</span></span>
+                    <span className="text-[10px] text-zinc-500 font-semibold">(আবশ্যক)</span>
+                  </label>
+                  <div className="flex rounded-xl border border-zinc-300 overflow-hidden focus-within:border-zinc-800 transition-colors bg-white">
+                    <div className="w-12 bg-zinc-100/90 border-r border-zinc-300 flex items-center justify-center text-zinc-700 shrink-0">
+                      <MapPin className="w-4 h-4 text-emerald-800" />
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      placeholder="বাসা/রোড নং, থানা ও জেলার নাম লিখুন"
+                      value={formData.address}
+                      onChange={e => {
+                        setFormData({ ...formData, address: e.target.value });
+                        if (errorMessage) setErrorMessage(null);
+                      }}
+                      className="w-full px-3.5 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-zinc-900 placeholder:text-zinc-400 focus:outline-none"
+                    />
                   </div>
-                  <input
-                    type="text"
-                    required
-                    placeholder="ঠিকানা (থানা+জেলা) লিখুন"
-                    value={formData.address}
-                    onChange={e => setFormData({ ...formData, address: e.target.value })}
-                    className="w-full px-3.5 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-zinc-900 placeholder:text-zinc-400 focus:outline-none"
-                  />
                 </div>
               </div>
 
